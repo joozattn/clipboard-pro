@@ -1,0 +1,16 @@
+# .NET 构建产物
+bin/
+obj/
+publish/
+dist/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# 用户本地文件
+*.log
+TestResults/
