@@ -1,3 +1,7 @@
+[![Release](https://img.shields.io/github/v/release/joozattn/clipboard-pro)](https://github.com/joozattn/clipboard-pro/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+**[⬇ 下载最新版（Windows x64，解压即用）](https://github.com/joozattn/clipboard-pro/releases/latest)**&#8203;
 # ClipboardPro · 剪贴板历史（重启不丢失）
 
 一个 Windows 剪贴板历史管理工具，复刻系统自带 Win+V 面板的外观与操作习惯，但**历史记录落盘保存、重启不清除、条数上限可自定义**。
