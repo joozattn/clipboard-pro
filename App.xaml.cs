@@ -105,6 +105,9 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
+        // 是否由开机自启（Run 项带 --autostart 参数）拉起
+        bool isAutoStart = e.Args.Contains("--autostart");
+
         // 单实例：避免重复运行导致双份监听与热键冲突
         if (!AcquireSingleInstance())
         {
@@ -122,7 +125,6 @@ public partial class App : Application
         };
 
         AppPaths.EnsureDirs();
-        AppPaths.Log("===== 应用启动 =====");
 
         // 数据目录加载：配置里可能带有"数据位置指引"，循环跟随直到目录稳定
         //（支持多次链式迁移）。每次 Load 内部都会按配置切换 AppPaths 数据目录。
@@ -133,6 +135,12 @@ public partial class App : Application
             _cfg = AppConfig.Load();
             if (string.Equals(AppPaths.DataDir, before, StringComparison.OrdinalIgnoreCase)) break;
         }
+
+        // 目录切换完成后，再确保实际数据目录存在并记录启动日志，
+        // 避免日志被写到迁移前的旧目录。
+        AppPaths.EnsureDirs();
+        AppPaths.Log("===== 应用启动 =====");
+
         _store = new HistoryStore(_cfg);
 
         ThemeManager.Apply(_cfg.Theme);
@@ -147,6 +155,12 @@ public partial class App : Application
         ApplyStartupSetting();
 
         AppPaths.Log($"启动完成。历史 {_store.Count} 条，热键 {EffectiveHotkeyText}。");
+
+        // 开机自启 + 托盘图标关闭 + 用户开启提示：弹一次确认提示
+        if (isAutoStart && _cfg.StartupNotify && !_cfg.ShowTrayIcon)
+        {
+            Dispatcher.BeginInvoke(new Action(ShowStartupNotify), DispatcherPriority.ApplicationIdle);
+        }
     }
 
     #region 单实例
@@ -516,6 +530,16 @@ public partial class App : Application
             "剪贴板历史", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
+    /// <summary>开机自启后的后台运行提示（托盘图标关闭时）。</summary>
+    private void ShowStartupNotify()
+    {
+        MessageBox.Show(
+            "剪贴板历史已在后台运行。\n\n" +
+            "按 Win+V 即可唤出面板；需要设置请唤出面板后点右上角齿轮。\n\n" +
+            "若不想再看到本提示，可在设置中关闭「开机时提示」。",
+            "剪贴板历史", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
     private void ExitApp()
     {
         // 托盘图标可能被用户隐藏（_tray 为 null）
@@ -547,7 +571,8 @@ public partial class App : Application
                 var exe = Environment.ProcessPath;
                 if (!string.IsNullOrEmpty(exe))
                 {
-                    key.SetValue(RunValueName, $"\"{exe}\"", Microsoft.Win32.RegistryValueKind.String);
+                    // 带 --autostart 参数，供启动时识别"是否开机自启"
+                    key.SetValue(RunValueName, $"\"{exe}\" --autostart", Microsoft.Win32.RegistryValueKind.String);
                 }
             }
             else if (key.GetValue(RunValueName) != null)

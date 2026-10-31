@@ -15,10 +15,6 @@
     <SolidColorBrush x:Key="TextSecondary"  Color="#6E6E6E" />
     <SolidColorBrush x:Key="TextTertiary"   Color="#9A9A9A" />
 
-    <SolidColorBrush x:Key="SearchBg"       Color="#FFFFFF" />
-    <SolidColorBrush x:Key="SearchBorder"   Color="#E0E0E0" />
-    <SolidColorBrush x:Key="SearchFocusBorder" Color="#0067C0" />
-
     <SolidColorBrush x:Key="Divider"        Color="#E4E4E4" />
     <SolidColorBrush x:Key="Accent"         Color="#0067C0" />
     <SolidColorBrush x:Key="AccentHover"    Color="#0B5FA8" />

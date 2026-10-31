@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using ClipboardPro.Models;
 using ClipboardPro.Services;
 
@@ -43,6 +44,7 @@ public partial class SettingsWindow : Window
         PasteCheck.IsChecked = _cfg.PasteOnSelect;
         InterceptWinVCheck.IsChecked = _cfg.InterceptWinV;
         ShowTrayIconCheck.IsChecked = _cfg.ShowTrayIcon;
+        StartupNotifyCheck.IsChecked = _cfg.StartupNotify;
 
         ThemeAuto.IsChecked = _cfg.Theme == "Auto";
         ThemeLight.IsChecked = _cfg.Theme == "Light";
@@ -126,6 +128,12 @@ public partial class SettingsWindow : Window
         _cfg.ShowTrayIcon = ShowTrayIconCheck.IsChecked == true;
     }
 
+    private void StartupNotifyCheck_Click(object sender, RoutedEventArgs e)
+    {
+        if (_loading) return;
+        _cfg.StartupNotify = StartupNotifyCheck.IsChecked == true;
+    }
+
     private void Theme_Changed(object sender, RoutedEventArgs e)
     {
         if (_loading) return;
@@ -150,6 +158,7 @@ public partial class SettingsWindow : Window
         _cfg.PasteOnSelect = PasteCheck.IsChecked == true;
         _cfg.InterceptWinV = InterceptWinVCheck.IsChecked == true;
         _cfg.ShowTrayIcon = ShowTrayIconCheck.IsChecked == true;
+        _cfg.StartupNotify = StartupNotifyCheck.IsChecked == true;
 
         _cfg.Save();
 
@@ -308,6 +317,58 @@ public partial class SettingsWindow : Window
 
         MessageBox.Show(this, "已清空全部记录。", "剪贴板",
             MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+
+    /// <summary>标题栏拖动：按住标题区域可移动设置窗口。</summary>
+    private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.OriginalSource is DependencyObject src && IsInsideButton(src)) return;
+        try { DragMove(); }
+        catch { /* 拖动被系统取消等场景，忽略 */ }
+    }
+
+    private static bool IsInsideButton(DependencyObject node)
+    {
+        while (node != null)
+        {
+            if (node is Button) return true;
+            node = VisualTreeHelper.GetParent(node);
+        }
+        return false;
+    }
+
+    /// <summary>在桌面创建指向本程序的快捷方式。</summary>
+    private void CreateShortcut_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            string lnk = Path.Combine(desktop, "剪贴板历史.lnk");
+            string exe = Environment.ProcessPath;
+
+            if (string.IsNullOrEmpty(exe))
+                throw new InvalidOperationException("无法确定程序路径");
+
+            Type shellType = Type.GetTypeFromProgID("WScript.Shell");
+            if (shellType == null)
+                throw new InvalidOperationException("系统脚本组件不可用");
+
+            dynamic shell = Activator.CreateInstance(shellType);
+            dynamic shortcut = shell.CreateShortcut(lnk);
+            shortcut.TargetPath = exe;
+            shortcut.WorkingDirectory = Path.GetDirectoryName(exe);
+            shortcut.IconLocation = exe + ",0";
+            shortcut.Description = "剪贴板历史";
+            shortcut.Save();
+
+            MessageBox.Show(this, $"已创建桌面快捷方式：\n{lnk}", "剪贴板",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, $"创建快捷方式失败：{ex.Message}", "剪贴板",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 
     protected override void OnClosed(EventArgs e)

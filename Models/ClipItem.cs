@@ -64,38 +64,4 @@ public class ClipItem
             return t;
         }
     }
-
-    /// <summary>界面副标题：类型与时间。</summary>
-    [JsonIgnore]
-    public string Subtitle
-    {
-        get
-        {
-            string type = Kind switch
-            {
-                ClipKind.Image => "图片",
-                ClipKind.Files => "文件",
-                _ => LooksLikeUrl() ? "链接" : "文本"
-            };
-            return $"{type} · {DescribeTime(CreatedAt)}";
-        }
-    }
-
-    private bool LooksLikeUrl()
-    {
-        var s = Text.Trim();
-        return s.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
-            || s.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static string DescribeTime(DateTime t)
-    {
-        var span = DateTime.Now - t;
-        if (span.TotalMinutes < 1) return "刚刚";
-        if (span.TotalMinutes < 60) return $"{(int)span.TotalMinutes} 分钟前";
-        if (t.Date == DateTime.Today) return t.ToString("HH:mm");
-        if (t.Date == DateTime.Today.AddDays(-1)) return $"昨天 {t:HH:mm}";
-        if (span.TotalDays < 365) return t.ToString("M月d日 HH:mm");
-        return t.ToString("yyyy年M月d日");
-    }
 }

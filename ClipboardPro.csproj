@@ -11,6 +11,7 @@
     <AssemblyName>ClipboardPro</AssemblyName>
     <RootNamespace>ClipboardPro</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>cat.ico</ApplicationIcon>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <Version>1.0.0</Version>
     <AssemblyTitle>剪贴板历史</AssemblyTitle>

@@ -23,8 +23,10 @@
                 CornerRadius="10">
             <StackPanel Margin="22,18,22,16">
 
-                <!-- 标题栏 -->
-                <Grid Margin="0,0,0,16">
+                <!-- 标题栏（可拖动） -->
+                <Grid Margin="0,0,0,16"
+                      Background="Transparent"
+                      MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                     <TextBlock Text="剪贴板设置"
                                Style="{StaticResource BaseText}"
                                FontSize="16"
@@ -177,6 +179,28 @@
                                   VerticalAlignment="Center"
                                   Click="ShowTrayIconCheck_Click" />
                     </Grid>
+
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="开机时提示"
+                                       Style="{StaticResource BaseText}"
+                                       FontSize="13" />
+                            <TextBlock Text="托盘图标关闭时，开机自启后弹一次提示，确认程序已在后台运行"
+                                       Style="{StaticResource BaseText}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource TextTertiary}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,2,0,0" />
+                        </StackPanel>
+                        <CheckBox Grid.Column="1"
+                                  x:Name="StartupNotifyCheck"
+                                  VerticalAlignment="Center"
+                                  Click="StartupNotifyCheck_Click" />
+                    </Grid>
                 </StackPanel>
 
                 <Separator Background="{DynamicResource Divider}" Height="1" Margin="0,0,0,16" />
@@ -233,6 +257,12 @@
                             Margin="8,0,0,0"
                             Click="ClearAll_Click" />
                 </StackPanel>
+
+                <Button Style="{StaticResource TextButtonStyle}"
+                        Content="创建桌面快捷方式"
+                        HorizontalAlignment="Left"
+                        Margin="0,8,0,0"
+                        Click="CreateShortcut_Click" />
 
                 <Separator Background="{DynamicResource Divider}" Height="1" Margin="0,16,0,14" />
 

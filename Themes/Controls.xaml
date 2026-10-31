@@ -280,17 +280,4 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ClipMenuSeparatorStyle" TargetType="Separator">
-        <Setter Property="Height" Value="1" />
-        <Setter Property="Margin" Value="8,4" />
-        <Setter Property="Background" Value="{DynamicResource Divider}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Separator">
-                    <Border Height="1" Background="{TemplateBinding Background}" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
 </ResourceDictionary>

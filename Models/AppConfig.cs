@@ -26,15 +26,15 @@ public class AppConfig
     /// <summary>是否显示托盘图标。关闭后仍可通过面板右上角的设置入口进入设置。</summary>
     public bool ShowTrayIcon { get; set; } = true;
 
+    /// <summary>托盘图标关闭时，开机自启后是否弹一次提示（确认程序已在后台运行）。</summary>
+    public bool StartupNotify { get; set; }
+
     /// <summary>自定义数据目录。空表示使用默认的 %APPDATA%\ClipboardPro。</summary>
     public string DataDirOverride { get; set; }
 
     /// <summary>面板上次位置（-1 表示未记忆，使用默认的底部居中）。</summary>
     public double PanelLeft { get; set; } = -1;
     public double PanelTop { get; set; } = -1;
-
-    /// <summary>面板显示时自动聚焦搜索框。</summary>
-    public bool FocusSearchOnOpen { get; set; } = true;
 
     /// <summary>点击条目后是否自动粘贴到前台窗口（而非仅复制）。</summary>
     public bool PasteOnSelect { get; set; } = true;
@@ -114,7 +114,9 @@ public class AppConfig
         if (MaxTextLength < 1024) MaxTextLength = 1024;
         if (MaxBlobBytes < 1024 * 1024) MaxBlobBytes = 1024 * 1024;
         if (string.IsNullOrWhiteSpace(FallbackHotkey)) FallbackHotkey = "Ctrl+Alt+V";
-        if (string.IsNullOrWhiteSpace(DataDirOverride)) DataDirOverride = null;
+        // 数据目录必须为绝对路径，否则回退默认位置（防止相对路径导致数据写到工作目录）
+        if (string.IsNullOrWhiteSpace(DataDirOverride) || !Path.IsPathRooted(DataDirOverride))
+            DataDirOverride = null;
         Theme = string.IsNullOrWhiteSpace(Theme) ? "Auto" : Theme;
     }
 }

@@ -1,8 +1,9 @@
+# ClipboardPro · 剪贴板历史（重启不丢失）
+
 [![Release](https://img.shields.io/github/v/release/joozattn/clipboard-pro)](https://github.com/joozattn/clipboard-pro/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**[⬇ 下载最新版（Windows x64，解压即用）](https://github.com/joozattn/clipboard-pro/releases/latest)**&#8203;
-# ClipboardPro · 剪贴板历史（重启不丢失）
+**[⬇ 下载最新版（Windows x64，解压即用，无需安装 .NET 运行时）](https://github.com/joozattn/clipboard-pro/releases/latest)**
 
 一个 Windows 剪贴板历史管理工具，复刻系统自带 Win+V 面板的外观与操作习惯，但**历史记录落盘保存、重启不清除、条数上限可自定义**。
 
@@ -23,9 +24,11 @@ Windows 自带的剪贴板历史（Win+V）有两个硬限制，且没有任何�
 - **界面复刻系统**：单列卡片、浅色描边、右上「…」/右下图钉、悬停高亮，支持浅色/深色/跟随系统主题；
 - **支持文本 / 图片 / 文件**三种内容，内容指纹去重、重复复制自动置顶；
 - **固定（📌）**：固定条目永不淘汰、跨重启保留；
-- **可拖动**：按住面板顶部空白处拖到任意位置，自动记忆；
+- **可拖动**：按住面板顶部空白处拖到任意位置，自动记忆；设置窗口同样可拖动；
 - **失焦不消失**：仅点 ✕ / Esc / 再次按 Win+V 关闭；
 - **数据目录可自定义**：设置中一键迁移（含历史与图片），自动重启生效；
+- **桌面快捷方式**：设置中一键创建（图标为黄色像素小猫）；
+- **开机提示（可选）**：托盘图标隐藏时，开机自启后弹一次提示确认程序已在后台运行；
 - **隐私保护**：尊重密码管理器写入的「不纳入剪贴板历史」标记（`ExcludeClipboardContentFromMonitorProcessing` / `CanIncludeInClipboardHistory`），敏感内容不入库；
 - **托盘小猫**（可在设置中隐藏托盘图标）。
 
@@ -55,6 +58,7 @@ Windows 自带的剪贴板历史（Win+V）有两个硬限制，且没有任何�
 | `InterceptWinV` | `true` | 接管 Win+V（屏蔽系统剪贴板面板） |
 | `RunAtStartup` | `true` | 开机自动启动 |
 | `ShowTrayIcon` | `true` | 显示托盘图标 |
+| `StartupNotify` | `false` | 托盘图标隐藏时，开机自启后弹一次提示 |
 | `PasteOnSelect` | `true` | 选中条目后自动粘贴到原窗口 |
 | `Theme` | `Auto` | `Auto` / `Light` / `Dark` |
 | `DataDirOverride` | 空 | 自定义数据目录 |
